@@ -117,3 +117,10 @@ class Model():
 			curr_frame = curr_frame[1:]
 			curr_frame = np.insert(curr_frame, [window_size-2], predicted[-1], axis=0)
 		return predicted
+
+	def evaluate(self, x_test, y_test):
+		loss = self.model.evaluate(x_test, y_test)
+		print('[Model] Loss:', loss)
+
+	def summary(self):
+		self.model.summary()
