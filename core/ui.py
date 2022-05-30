@@ -1,10 +1,11 @@
 from distutils.command import config
 from email.policy import default
 from glob import glob
+import json
 import os
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
-from core.actions import make_new_model, run_predict, run_price_predict, train_further
+from core.actions import make_new_model, run_point_predict, run_price_predict, run_seq_predict, train_further
 from core.model import Model
 
 class UI:
@@ -23,9 +24,12 @@ class UI:
                 ]
             else:
                 choices = [
-                    Choice("Predict"),
+                    Choice("Predict Sequences"),
+                    Choice("Predict Points"),
+                    Choice("Predict Price"),
                     Choice("Show Model Summary"),
                     Choice("Train Further"),
+                    Choice("Refresh Configs"),
                     Choice("Exit")
                 ]
 
@@ -41,13 +45,19 @@ class UI:
                     self.model.load_model(model_path)
                 case "Train New Model":
                     self.model = make_new_model(self.configs, self.data)
-                case "Predict":
-                    run_predict(self.model, self.data, self.configs)
+                case "Predict Sequences":
+                    run_seq_predict(self.model, self.data, self.configs)
+                case "Predict Points":
+                    run_point_predict(self.model, self.data, self.configs)
                 case "Show Model Summary":
                     self.model.summary()
                 case "Exit":
                     break
                 case "Train Further":
                     train_further(self.model, self.configs, self.data)
+                case "Predict Price":
+                    run_price_predict(self.model, self.data, self.configs)
+                case "Refresh Configs":
+                    self.configs = json.load(open('config.json', 'r'))
                 case _:
                     print("Invalid choice!")
