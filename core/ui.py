@@ -5,7 +5,7 @@ import json
 import os
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
-from core.actions import make_new_model, run_point_predict, run_price_predict, run_seq_predict, train_further
+from core.actions import load_old_model, make_new_model, run_point_predict, run_price_predict, run_seq_predict, train_further
 from core.model import Model
 
 class UI:
@@ -40,9 +40,7 @@ class UI:
             
             match action:
                 case "Choose a model":
-                    model_path = inquirer.filepath("Choose a model to load", default=self.configs['model']['save_dir']).execute()
-                    self.model = Model()
-                    self.model.load_model(model_path)
+                    self.model = load_old_model(inquirer.filepath("Choose a model to load", default=self.configs['model']['save_dir']).execute())
                 case "Train New Model":
                     self.model = make_new_model(self.configs, self.data)
                 case "Predict Sequences":
@@ -51,13 +49,13 @@ class UI:
                     run_point_predict(self.model, self.data, self.configs)
                 case "Show Model Summary":
                     self.model.summary()
-                case "Exit":
-                    break
                 case "Train Further":
                     train_further(self.model, self.configs, self.data)
                 case "Predict Price":
                     run_price_predict(self.model, self.data, self.configs)
                 case "Refresh Configs":
                     self.configs = json.load(open('config.json', 'r'))
+                case "Exit":
+                    break
                 case _:
                     print("Invalid choice!")
