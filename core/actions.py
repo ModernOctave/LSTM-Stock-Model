@@ -99,3 +99,10 @@ def run_price_predict(model: Model, data: DataLoader, configs):
 def train_further(model: Model, configs, data: DataLoader):
 
     run_train(data, model, configs)
+
+def evaluate_model(model: Model, data: DataLoader, configs):
+    x_test, y_test = data.get_test_data(
+        seq_len=configs['data']['sequence_length'],
+        normalise=configs['data']['normalise']
+    )
+    model.evaluate(x_test, y_test)
