@@ -5,7 +5,7 @@ import json
 import os
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
-from core.actions import load_old_model, make_new_model, run_point_predict, run_price_predict, run_seq_predict, train_further
+from core.actions import evaluate_model, load_old_model, make_new_model, run_point_predict, run_price_predict, run_seq_predict, train_further
 from core.model import Model
 
 class UI:
@@ -29,6 +29,7 @@ class UI:
                     Choice("Predict Price"),
                     Choice("Show Model Summary"),
                     Choice("Train Further"),
+                    Choice("Evaluate Model"),
                     Choice("Refresh Configs"),
                     Choice("Exit")
                 ]
@@ -51,6 +52,8 @@ class UI:
                     self.model.summary()
                 case "Train Further":
                     train_further(self.model, self.configs, self.data)
+                case "Evaluate Model":
+                    evaluate_model(self.model, self.data, self.configs)
                 case "Predict Price":
                     run_price_predict(self.model, self.data, self.configs)
                 case "Refresh Configs":
